@@ -1,0 +1,7 @@
+name: SkyWars
+main: SkyWars\Main
+version: INDEV
+api: 1.12.0
+author: MinecrafterPH
+description: SkyWars minigame for PocketMine.
+website: http://www.minecrafterph.tk
