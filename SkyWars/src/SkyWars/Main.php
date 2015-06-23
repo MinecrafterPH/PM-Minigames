@@ -48,4 +48,87 @@ class Main extends PluginBase implements Listener
     return $openGames;
   }
   
-  
+  public function playerJoinGame (Player $player,$gameNumber)
+  {
+    $levelName = "game-".$gameNumber;
+    $e = 0;
+    while ($e < 4){
+      $e++;
+      if($this->game[$gameNumber."-player-".$e] == false){
+        $place = $e;
+      }
+    }
+    if(isset($place)){
+      if($place < 5){
+        $player->teleport($this->getServer()->getLevelByName($levelName)->getSafeSpawn());
+        $pos = $this->pedestrals["$gameNumber-$place"];
+        if(isset($pos) and count($this->getServer()->getLevelByName($levelName)->getPlayers())<=4){
+          $player->teleport($pos);
+          }else{
+            $player->sendMessage(TextFormat::RED."[Error 2] No place available");
+            $player->teleport($this->getServer()->getDefaultLevel()->getSpawnLocation());
+          }
+        $numberOfPlayers = count($this->getServer()->getLevelByName($levelName)->getPlayers());
+        foreach($this->getServer()->getLevelByName($levelName)->getPlayers() as $p){
+          $p->sendMessage(TextFormat::BLUE."[Skywars][".$gameNumber."] Number of player(s) : ".$numberOfPlayers."/4");
+        }
+      }
+      if (isset($numberOfPlayers) and $numberOfPlayers == 4){
+        $this->getServer()->getScheduler()->scheduleDelayedTask(new Tasks\StartGame($this,$gameNumber,3),0);
+        $this->getServer()->getScheduler()->scheduleDelayedTask(new Tasks\StartGame($this,$gameNumber,2),20);
+        $this->getServer()->getScheduler()->scheduleDelayedTask(new Tasks\StartGame($this,$gameNumber,1),40);
+        $this->getServer()->getScheduler()->scheduleDelayedTask(new Tasks\StartGame($this,$gameNumber,0),60);
+        $this->game[$gameNumber."-open"] = false;
+      }
+    $player->getInventory()->clearAll();
+    $player->setHealth(20);
+    $item = Item::get(297);
+    $item->setCount(6);
+    $player->getInventory()->addItem($item);
+    $item = Item::get(1);
+    $item->setCount(64);
+    $player->getInventory()->addItem($item);
+    if(isset($this->playerKits[$player->getName()]) == false){
+      $this->playerKits[$player->getName()] = "default";
+    }
+    switch($this->playerKits[$player->getName()]){
+      case "default":
+        if(isset($this->vips[$player->getName()]) and $this->vips[$player->getName()] == true){
+          $player->getInventory()->setArmorContents([Item::get(302),Item::get(303),Item::get(304),Item::get(305)]);
+          $player->getInventory()->addItem(Item::get(267));
+        }else{
+          $player->getInventory()->setArmorContents([Item::get(298),Item::get(299),Item::get(300),Item::get(301)]);
+          $player->getInventory()->addItem(Item::get(268));
+        }
+      break;
+      case "vip":
+        $player->getInventory()->setArmorContents([Item::get(302),Item::get(303),Item::get(304),Item::get(305)]);
+        $player->getInventory()->addItem(Item::get(267));
+      break;
+      case "archer":
+        $player->getInventory()->setArmorContents([Item::get(298),Item::get(299),Item::get(300),Item::get(301)]);
+        $player->getInventory()->addItem(Item::get(261));
+        $item = Item::get(262);
+        $item->setCount(32);
+        $player->getInventory()->addItem($item);
+        break;
+      case "barbarian":
+        $player->getInventory()->setArmorContents([Item::get(298),Item::get(299),Item::get(300),Item::get(301)]);
+        $player->getInventory()->addItem(Item::get(268));
+      break;
+      case "miner":
+        $player->getInventory()->addItem(Item::get(303));
+        $player->getInventory()->addItem(Item::get(257));
+      }
+    $this->game[$gameNumber."-player-".$place] = true;
+    $this->playersInGame[$player->getName()] = true;
+    $this->playersInGame[$player->getName()."-gameNumber"] = $gameNumber;
+    $this->playersInGame[$player->getName()."-place"] = $place;
+    }
+    else{
+      $player->sendMessage(TextFormat::RED."No game available. Please try again later");
+    }
+  }
+}
+
+?>
