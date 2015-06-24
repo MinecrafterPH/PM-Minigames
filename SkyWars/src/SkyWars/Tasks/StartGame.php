@@ -8,6 +8,7 @@ use pocketmine\utils\TextFormat;
 use pocketmine\math\Vector3;
 use pocketmine\block\Block;
 
+use SkyWars\Main;
 
 class StartGame extends PluginTask{
     public $plugin;
