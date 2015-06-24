@@ -35,12 +35,12 @@ class StartGame extends PluginTask{
         if($time == 0){
             $this->plugin->game[$this->gameNumber."-started"] = true;
             $this->plugin->game[$this->gameNumber."-open"] = false;
-            foreach(Server::getInstance()->getLevelByName($levelName)->getPlayers() as $p){
-                Server::getInstance()->getLevelByName("game-".$this->gameNumber)->setBlock(new Vector3($p->getX(),$p->getY()-1,$p->getZ()),Block::get(0,0));
+            foreach($this->getServer()->getLevelByName($levelName)->getPlayers() as $p){
+                $this->getServer()->getLevelByName("game-".$this->gameNumber)->setBlock(new Vector3($p->getX(),$p->getY()-1,$p->getZ()),Block::get(0,0));
                 $p->sendMessage(TextFormat::GREEN."[SkyWars] Game " . $this->gameNumber . " has started!");
             }
         }else{
-            foreach(Server::getInstance()->getLevelByName($levelName)->getPlayers() as $p) {
+            foreach($this->getServer()->getLevelByName($levelName)->getPlayers() as $p) {
                 $p->sendPopup(TextFormat::BLUE . "[SkyWars] Game " . $this->gameNumber . " starting in " . TextFormat::GREEN . $this->time);
             }
         }
