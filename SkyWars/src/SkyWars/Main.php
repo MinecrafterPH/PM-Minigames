@@ -7,6 +7,8 @@ use pocketmine\Player;
 use pocketmine\item\Item;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\utils\TextFormat;
 
 class Main extends PluginBase implements Listener
@@ -16,6 +18,7 @@ class Main extends PluginBase implements Listener
   {
     $this->getServer()->getPluginManager()->registerEvents($this,$this);
     $this->getLogger()->info("SkyWars has been enabled.");
+    $cfg = $this->getConfig();
     $this->game = [
       "1-players" => 0,"1-open"=>true,"1-started"=>false,"1-player-1"=>false,"1-player-2"=>false,"1-player-3"=>false,"1-player-4"=>false
       ,"2-players" => 0,"2-open"=>true,"2-started"=>false,"2-player-1"=>false,"2-player-2"=>false,"2-player-3"=>false,"2-player-4"=>false
@@ -129,6 +132,20 @@ class Main extends PluginBase implements Listener
       $player->sendMessage(TextFormat::RED."No game available. Please try again later");
     }
   }
+  
+  public function onBlockBreak(BlockBreakEvent $event){
+		if($event->getPlayer()->getLevel()->getName() == $cfg->get('lobby') and !$event->getPlayer()->hasPermission("skywars.breakblocks")){
+			$event->setCancelled(); 
+			$event->getPlayer()->sendMessage("You are not allowed to break blocks.");
+		}
+	}
+	
+	public function onBlockPlace(BlockPlaceEvent $event){
+		if($event->getPlayer()->getLevel()->getName() == $this->getConfig()->get('lobby') and !$event->getPlayer()->hasPermission("skywars.placeblocks")){
+			$event->setCancelled();
+			$event->getPlayer()->sendMessage("You sre not allowed to place blocks.");
+		}
+	}
 }
 
 ?>
