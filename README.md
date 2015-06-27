@@ -1,2 +1,2 @@
 # PM-Minigames
-Minigame plugins for PocketMine-MP.
+###### Minigame plugins for PocketMine-MP.
