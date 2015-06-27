@@ -6,9 +6,13 @@ use Infected\BaseGame;
 use Infected\utils\TipTask;
 use Infected\utils\InvincibilityTask;
 use Infected\utils\minigames\utils;
+use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\event\player\PlayerRespawnEvent;
+use pocketmine\event\entity\EntityDamageByBlockEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\utils\TextFormat;
 use pocketmine\level\Position;
 use pocketmine\item\LeatherBoots;
@@ -21,12 +25,9 @@ use pocketmine\item\ChainHelmet;
 use pocketmine\item\ChainLeggings;
 use pocketmine\item\StoneSword;
 use pocketmine\item\IronSword;
-use pocketmine\event\entity\EntityDamageByBlockEvent;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\block\Air;
-use pocketmine\event\player\PlayerRespawnEvent;
  
-class Infected implements BaseGame, Listener
+class Main extends PluginBase implements BaseGame, Listener
 {
         public static $isRunning;
         public $plugin;
